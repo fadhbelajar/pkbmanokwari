@@ -1,10 +1,13 @@
 import { createBrowserClient as createBrowserClientBase } from '@supabase/ssr';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+export const createClient = () => {
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
-export const createClient = () =>
-  createBrowserClientBase(supabaseUrl!, supabaseKey!, {
+  if (!supabaseUrl) throw new Error('Missing VITE_SUPABASE_URL');
+  if (!supabaseKey) throw new Error('Missing VITE_SUPABASE_PUBLISHABLE_KEY');
+
+  return createBrowserClientBase(supabaseUrl, supabaseKey, {
     cookies: {
       getAll() {
         if (typeof document === 'undefined') return [];
@@ -24,9 +27,10 @@ export const createClient = () =>
           if (options?.path) cookieStr += `; Path=${options.path}`;
           if (options?.domain) cookieStr += `; Domain=${options.domain}`;
           if (options?.secure) cookieStr += `; Secure`;
-          if (options?.httpOnly === false) cookieStr += `; SameSite=Lax`;
+          if (options?.httpOnly === false) cookieStr += '; SameSite=Lax';
           document.cookie = cookieStr;
         });
       },
     },
   });
+};
