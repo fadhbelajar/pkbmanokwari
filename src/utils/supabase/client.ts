@@ -1,15 +1,10 @@
-import { createBrowserClient } from '@supabase/ssr';
+import { createBrowserClient as createBrowserClientBase } from '@supabase/ssr';
 
-export const createClient = () => {
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-  const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
-  if (!supabaseUrl || !supabaseAnonKey) {
-    console.warn('Supabase belum dikonfigurasi');
-    return null;
-  }
-
-  return createBrowserClient(supabaseUrl, supabaseAnonKey, {
+export const createClient = () =>
+  createBrowserClientBase(supabaseUrl!, supabaseKey!, {
     cookies: {
       getAll() {
         if (typeof document === 'undefined') return [];
@@ -35,4 +30,3 @@ export const createClient = () => {
       },
     },
   });
-};
