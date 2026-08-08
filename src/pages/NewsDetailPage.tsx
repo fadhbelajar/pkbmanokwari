@@ -73,12 +73,7 @@ export default function NewsDetailPage() {
 
             <div
               className="prose prose-slate prose-lg max-w-none leading-relaxed text-slate-600"
-              dangerouslySetInnerHTML={{
-                __html: article.content
-                  .split('\n')
-                  .map((para) => `<p class="mb-4">${para}</p>`)
-                  .join('')
-              }}
+              dangerouslySetInnerHTML={{ __html: article.content }}
             />
           </div>
         </article>

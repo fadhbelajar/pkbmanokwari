@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useSite, News } from '../../context/SiteContext';
 import { Plus, Edit2, Trash2, X, Save, Upload, Eye, Code, Share2, Check } from 'lucide-react';
 import { socialPlatforms, getPlatformLabel, SocialPlatform } from '../../utils/SocialShareService';
+import RichTextEditor from '../RichTextEditor';
 
 export default function AdminNews() {
   const { news, addNews, updateNews, deleteNews, shareNews } = useSite();
@@ -209,7 +210,7 @@ export default function AdminNews() {
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Konten Lengkap</label>
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs text-slate-400">Gunakan Enter untuk paragraf baru</span>
+                  <span className="text-xs text-slate-400">Gunakan toolbar untuk formatting teks</span>
                   <button
                     type="button"
                     onClick={() => setShowPreview(!showPreview)}
@@ -224,32 +225,24 @@ export default function AdminNews() {
                   </button>
                 </div>
                 {showPreview ? (
-                  <div className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 min-h-[120px]">
+                  <div className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 min-h-[120px]">
                     {form.content ? (
                       <div
                         className="prose prose-sm max-w-none text-slate-700"
-                        dangerouslySetInnerHTML={{
-                          __html: form.content
-                            .split('\n')
-                            .filter((p) => p.trim())
-                            .map((para) => `<p class="mb-2">${para.trim()}</p>`)
-                            .join('')
-                        }}
+                        dangerouslySetInnerHTML={{ __html: form.content }}
                       />
                     ) : (
                       <span className="text-slate-400">Pratinjau konten akan muncul di sini...</span>
                     )}
                   </div>
                 ) : (
-                  <textarea
-                    required
+                  <RichTextEditor
                     value={form.content}
-                    onChange={(e) => setForm({ ...form, content: e.target.value })}
-                    rows={5}
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 outline-none resize-none"
+                    onChange={(content) => setForm({ ...form, content })}
+                    placeholder="Tulis isi berita lengkap di sini. Gunakan toolbar untuk format teks, sisipkan tautan, buat daftar, dll."
                   />
                 )}
-               </div>
+              </div>
 
                <div className="border-t pt-4">
                  <label className="block text-sm font-medium text-slate-700 mb-2">Auto-share ke Sosial Media</label>
