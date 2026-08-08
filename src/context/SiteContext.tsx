@@ -7,6 +7,8 @@ export interface Leader {
   position: string;
   photo: string;
   bio: string;
+  order: number;
+  partyNumber?: string;
 }
 
 export interface News {
@@ -132,56 +134,66 @@ const defaultLeaders: Leader[] = [
     name: 'Prof. Dr. H. Ahmad Said, M.A.',
     position: 'Ketua Dewan Syuro',
     photo: 'https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=400',
-    bio: 'Tokoh senior yang mengawasi arah kebijakan dan pengawasan internal partai di tingkat cabang.'
+    bio: 'Tokoh senior yang mengawasi arah kebijakan dan pengawasan internal partai di tingkat cabang.',
+    order: 1,
+    partyNumber: '1'
   },
   {
     id: '2',
     name: 'Drs. Agus Salim, M.Si.',
     position: 'Sekretaris Dewan Syuro',
     photo: 'https://images.pexels.com/photos/3756679/pexels-photo-3756679.jpeg?auto=compress&cs=tinysrgb&w=400',
-    bio: 'Ahli hukum dan tata kelola yang bertanggung jawab atas seluruh dokumen resmi dewan syuro.'
+    bio: 'Ahli hukum dan tata kelola yang bertanggung jawab atas seluruh dokumen resmi dewan syuro.',
+    order: 2
   },
   {
     id: '3',
     name: 'H. Abdul Rahman, S.H., M.H.',
     position: 'Ketua DPC PKB Manokwari',
     photo: '/images/Bang Udin PKB.jpeg',
-    bio: 'Pengacara senior dan aktivis politik yang telah mengabdi untuk masyarakat Manokwari selama lebih dari 20 tahun.'
+    bio: 'Pengacara senior dan aktivis politik yang telah mengabdi untuk masyarakat Manokwari selama lebih dari 20 tahun.',
+    order: 1,
+    partyNumber: '1'
   },
   {
     id: '4',
     name: 'Ahmad Fauzi, S.E.',
     position: 'Sekretaris DPC',
     photo: '/images/Aman PKB.jpeg',
-    bio: 'Profesional muda yang ahli dalam manajemen organisasi dan strategi politik.'
+    bio: 'Profesional muda yang ahli dalam manajemen organisasi dan strategi politik.',
+    order: 2
   },
   {
     id: '5',
     name: 'Hj. Fatimah, S.Ag.',
     position: 'Bendahara DPC',
     photo: '/images/Puput PKB.jpeg',
-    bio: 'Tokoh perempuan yang aktif dalam kegiatan sosial keagamaan dan pemberdayaan ekonomi umat.'
+    bio: 'Tokoh perempuan yang aktif dalam kegiatan sosial keagamaan dan pemberdayaan ekonomi umat.',
+    order: 3
   },
   {
     id: '6',
     name: 'Hj. Siti Aminah, M.Pd.',
     position: 'Wakil Ketua I',
-    photo: 'https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=400',
-    bio: 'Pendidik berpengalaman yang fokus pada pengembangan sumber daya manusia dan pemberdayaan perempuan.'
+    photo: 'https://images.pexels.com/photos/1681001/pexels-photo-1681001.jpeg?auto=compress&cs=tinysrgb&w=400',
+    bio: 'Pendidik berpengalaman yang fokus pada pengembangan sumber daya manusia dan pemberdayaan perempuan.',
+    order: 4
   },
   {
     id: '7',
     name: 'Drs. Muhammad Yusuf',
     position: 'Wakil Ketua II',
     photo: 'https://images.pexels.com/photos/8815889/pexels-photo-8815889.jpeg?auto=compress&cs=tinysrgb&w=400',
-    bio: 'Mantan birokrat dengan pengalaman luas dalam pemerintahan daerah dan pembangunan masyarakat.'
+    bio: 'Mantan birokrat dengan pengalaman luas dalam pemerintahan daerah dan pembangunan masyarakat.',
+    order: 5
   },
   {
     id: '8',
     name: 'Ir. Bambang Sutrisno',
     position: 'Ketua Bidang Organisasi',
     photo: 'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=400',
-    bio: 'Insinyur dan aktivis yang berdedikasi dalam pembangunan infrastruktur dan organisasi partai.'
+    bio: 'Insinyur dan aktivis yang berdedikasi dalam pembangunan infrastruktur dan organisasi partai.',
+    order: 6
   }
 ];
 

@@ -1,6 +1,6 @@
 import { useScrollReveal, useStaggerReveal } from '../hooks/useScrollReveal';
 import { useSite, Leader } from '../context/SiteContext';
-import { Users, Crown } from 'lucide-react';
+import { Users, Crown, Award } from 'lucide-react';
 import { useMemo } from 'react';
 
 export default function Leaders() {
@@ -10,11 +10,15 @@ export default function Leaders() {
   const dpcStagger = useStaggerReveal(leaders.length);
 
   const syuroLeaders = useMemo(
-    () => leaders.filter((l) => l.position.includes('Dewan Syuro')),
+    () => leaders
+      .filter((l) => l.position.includes('Dewan Syuro'))
+      .sort((a, b) => (a.order || 0) - (b.order || 0)),
     [leaders]
   );
   const dpcLeaders = useMemo(
-    () => leaders.filter((l) => !l.position.includes('Dewan Syuro')),
+    () => leaders
+      .filter((l) => !l.position.includes('Dewan Syuro'))
+      .sort((a, b) => (a.order || 0) - (b.order || 0)),
     [leaders]
   );
 
@@ -86,6 +90,14 @@ function LeaderSection({
 }) {
   if (leaders.length === 0) return null;
 
+  const getPositionTier = (position: string): 'ketua' | 'wakil' | 'bidang' | 'other' => {
+    const pos = position.toLowerCase();
+    if (pos.includes('ketua')) return 'ketua';
+    if (pos.includes('wakil')) return 'wakil';
+    if (pos.includes('bidang') || pos.includes('koordinator') || pos.includes('sekretaris') || pos.includes('bendahara')) return 'bidang';
+    return 'other';
+  };
+
   return (
     <div className="mb-10 last:mb-0" ref={containerRef}>
       <div className="flex items-center gap-2 mb-4 pb-2 border-b border-slate-100">
@@ -102,7 +114,17 @@ function LeaderSection({
       >
         {leaders.map((leader, i) => {
           const idx = revealedItems[i] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8';
-          const isKetua = leader.position.includes('Ketua');
+          const isKetua = leader.position.toLowerCase().includes('ketua');
+          const isAdmin = leader.position.toLowerCase().includes('ketua') && layout === 'standard';
+          const tier = getPositionTier(leader.position);
+          const badgeColor = isKetua
+            ? 'bg-gradient-to-r from-primary-500 to-accent-500 text-white'
+            : tier === 'wakil'
+            ? 'bg-gradient-to-r from-accent-500 to-amber-500 text-white'
+            : tier === 'bidang'
+            ? 'bg-primary-500 text-white'
+            : 'bg-slate-200 text-slate-700';
+
           return (
             <div
               key={leader.id}
@@ -118,21 +140,27 @@ function LeaderSection({
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 via-transparent to-transparent" />
                 <div className="absolute bottom-3 left-3 right-3">
-                  <span
-                    className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold ${
-                      isKetua
-                        ? 'bg-gradient-to-r from-primary-500 to-accent-500 text-white'
-                        : 'bg-primary-500 text-white'
-                  }`}
-                  >
-                    {isKetua && <Crown className="w-2.5 h-2.5" />}
-                    {leader.position}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    {leader.partyNumber && tier === 'ketua' && (
+                      <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-br from-primary-600 to-accent-500 text-white">
+                        <Award className="w-3 h-3" />
+                        <span className="text-[8px] font-bold">{leader.partyNumber}</span>
+                      </div>
+                    )}
+                    <span
+                      className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold ${badgeColor}`}
+                    >
+                      {isKetua && <Crown className="w-2.5 h-2.5" />}
+                      {leader.position}
+                    </span>
+                  </div>
                 </div>
               </div>
 
               <div className="p-4">
-                <h3 className="text-sm font-bold text-slate-900 mb-1 group-hover:text-primary-700 transition-colors duration-300 line-clamp-1">
+                <h3 className={`font-bold mb-1 group-hover:text-primary-700 transition-colors duration-300 line-clamp-1 ${
+                  isAdmin ? 'text-primary-700 text-sm' : 'text-slate-900 text-sm'
+                }`}>
                   {leader.name}
                 </h3>
                 <p className="text-xs text-slate-500 leading-relaxed line-clamp-2">

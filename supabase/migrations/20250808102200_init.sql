@@ -19,8 +19,9 @@ create table if not exists leaders (
   name text not null,
   position text not null,
   photo text,
-  party_number text,
+  bio text,
   order_num integer default 0,
+  party_number text,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
   updated_at timestamp with time zone default timezone('utc'::text, now()) not null
 );

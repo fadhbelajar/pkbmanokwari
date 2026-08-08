@@ -10,11 +10,12 @@ export default function AdminLeaders() {
     name: '',
     position: '',
     photo: '',
-    bio: ''
+    bio: '',
+    order: 0
   });
 
   const resetForm = () => {
-    setForm({ name: '', position: '', photo: '', bio: '' });
+    setForm({ name: '', position: '', photo: '', bio: '', order: 0 });
     setEditingId(null);
     setShowForm(false);
   };
@@ -45,7 +46,9 @@ export default function AdminLeaders() {
       name: leader.name,
       position: leader.position,
       photo: leader.photo,
-      bio: leader.bio
+      bio: leader.bio,
+      order: leader.order || 0,
+      partyNumber: leader.partyNumber || ''
     });
     setEditingId(leader.id);
     setShowForm(true);
@@ -135,6 +138,33 @@ export default function AdminLeaders() {
                 />
               </div>
 
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Urutan</label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={form.order || 0}
+                    onChange={(e) => setForm({ ...form, order: parseInt(e.target.value) || 0 })}
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 outline-none"
+                    placeholder="1, 2, 3..."
+                  />
+                  <p className="text-xs text-slate-400 mt-1">Urutan tampilan pengurus</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">No. Partai (Opsional)</label>
+                  <input
+                    type="text"
+                    value={form.partyNumber || ''}
+                    onChange={(e) => setForm({ ...form, partyNumber: e.target.value || undefined })}
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 outline-none"
+                    placeholder="Misal: 1, 2, 3..."
+                  />
+                  <p className="text-xs text-slate-400 mt-1">Nomor partai untuk posisi Ketua</p>
+                </div>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Biografi</label>
                 <textarea
@@ -178,7 +208,15 @@ export default function AdminLeaders() {
                 className="w-16 h-16 rounded-xl object-cover"
               />
               <div className="flex-1 min-w-0">
-                <h4 className="font-bold text-slate-900 truncate">{leader.name}</h4>
+                <div className="flex items-center gap-2">
+                  <h4 className="font-bold text-slate-900 truncate">{leader.name}</h4>
+                  <span className="text-xs text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">#{leader.order || 0}</span>
+                  {leader.partyNumber && (
+                    <span className="text-xs font-bold text-white bg-gradient-to-r from-primary-500 to-accent-500 px-1.5 py-0.5 rounded">
+                      {leader.partyNumber}
+                    </span>
+                  )}
+                </div>
                 <p className="text-sm text-primary-600">{leader.position}</p>
                 <p className="text-xs text-slate-500 mt-1 line-clamp-2">{leader.bio}</p>
               </div>
