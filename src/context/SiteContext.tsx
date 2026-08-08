@@ -150,7 +150,7 @@ const defaultLeaders: Leader[] = [
     id: '3',
     name: 'H. Abdul Rahman, S.H., M.H.',
     position: 'Ketua DPC PKB Manokwari',
-    photo: '/images/Bang Udin PKB.jpeg',
+    photo: '/images/Bang_Udin_PKB.jpeg',
     bio: 'Pengacara senior dan aktivis politik yang telah mengabdi untuk masyarakat Manokwari selama lebih dari 20 tahun.',
     order: 1,
     partyNumber: '1'
@@ -159,7 +159,7 @@ const defaultLeaders: Leader[] = [
     id: '4',
     name: 'Ahmad Fauzi, S.E.',
     position: 'Sekretaris DPC',
-    photo: '/images/Aman PKB.jpeg',
+    photo: '/images/Aman_PKB.jpeg',
     bio: 'Profesional muda yang ahli dalam manajemen organisasi dan strategi politik.',
     order: 2
   },
@@ -167,7 +167,7 @@ const defaultLeaders: Leader[] = [
     id: '5',
     name: 'Hj. Fatimah, S.Ag.',
     position: 'Bendahara DPC',
-    photo: '/images/Puput PKB.jpeg',
+    photo: '/images/Puput_PKB.jpeg',
     bio: 'Tokoh perempuan yang aktif dalam kegiatan sosial keagamaan dan pemberdayaan ekonomi umat.',
     order: 3
   },

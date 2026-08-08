@@ -14,7 +14,7 @@ export default function Hero() {
       <div className="relative w-full">
         <div className="w-full h-[200px] sm:h-[300px] md:h-[400px]">
           <img
-            src="/images/Cover PKB Manokwari.png"
+            src="/images/Cover_PKB_Manokwari.png"
             alt="Kegiatan partai PKB Manokwari"
             className="w-full h-full object-cover"
             style={{ objectPosition: 'center -8%' }}
