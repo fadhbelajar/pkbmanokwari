@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useSite, News } from '../../context/SiteContext';
-import { Plus, Edit2, Trash2, X, Save, Upload, Eye, Code } from 'lucide-react';
+import { Plus, Edit2, Trash2, X, Save, Upload, Eye, Code, Share2, Check } from 'lucide-react';
+import { socialPlatforms, getPlatformLabel, SocialPlatform } from '../../utils/SocialShareService';
 
 export default function AdminNews() {
-  const { news, addNews, updateNews, deleteNews } = useSite();
+  const { news, addNews, updateNews, deleteNews, shareNews } = useSite();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState<Omit<News, 'id'>>({
@@ -12,7 +13,8 @@ export default function AdminNews() {
     content: '',
     image: '',
     date: new Date().toISOString().split('T')[0],
-    category: 'Organisasi'
+    category: 'Organisasi',
+    autoSharePlatforms: []
   });
 
   const categories = ['Organisasi', 'Sosial', 'Politik', 'Kaderisasi', 'Kegiatan'];
@@ -25,7 +27,8 @@ export default function AdminNews() {
       content: '',
       image: '',
       date: new Date().toISOString().split('T')[0],
-      category: 'Organisasi'
+      category: 'Organisasi',
+      autoSharePlatforms: []
     });
     setEditingId(null);
     setShowForm(false);
@@ -42,12 +45,17 @@ export default function AdminNews() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (editingId) {
       updateNews(editingId, form);
     } else {
-      addNews({ ...form, id: Date.now().toString() });
+      const newItem = { ...form, id: Date.now().toString() };
+      addNews(newItem);
+
+      if (form.autoSharePlatforms && form.autoSharePlatforms.length > 0) {
+        await shareNews(newItem.id, form.autoSharePlatforms);
+      }
     }
     resetForm();
   };
@@ -59,7 +67,8 @@ export default function AdminNews() {
       content: item.content,
       image: item.image,
       date: item.date,
-      category: item.category
+      category: item.category,
+      autoSharePlatforms: item.autoSharePlatforms || []
     });
     setEditingId(item.id);
     setShowForm(true);
@@ -68,6 +77,25 @@ export default function AdminNews() {
   const handleDelete = (id: string) => {
     if (confirm('Yakin ingin menghapus berita ini?')) {
       deleteNews(id);
+    }
+  };
+
+  const handleShareNow = async (item: News) => {
+    const platforms = item.autoSharePlatforms || [];
+    if (platforms.length === 0) {
+      alert('Pilih platform share otomatis dulu di form berita.');
+      return;
+    }
+    const shared = await shareNews(item.id, platforms);
+    if (shared.length > 0) {
+      alert(`Berhasil share ke: ${shared.join(', ')}`);
+    }
+  };
+
+  const handleQuickShare = async (item: News, platform: SocialPlatform) => {
+    const shared = await shareNews(item.id, [platform]);
+    if (shared.length > 0) {
+      alert(`Berhasil share ke ${getPlatformLabel(platform).label}`);
     }
   };
 
@@ -221,9 +249,40 @@ export default function AdminNews() {
                     className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 outline-none resize-none"
                   />
                 )}
-              </div>
+               </div>
 
-              <div className="flex gap-3 pt-4">
+               <div className="border-t pt-4">
+                 <label className="block text-sm font-medium text-slate-700 mb-2">Auto-share ke Sosial Media</label>
+                 <p className="text-xs text-slate-500 mb-3">Pilih platform untuk share otomatis saat berita dipublikasi</p>
+                 <div className="flex flex-wrap gap-3">
+                   {socialPlatforms.map((platform) => {
+                     const { label, color } = getPlatformLabel(platform);
+                     const isChecked = form.autoSharePlatforms?.includes(platform) || false;
+                     return (
+                       <label key={platform} className="flex items-center gap-2 cursor-pointer">
+                         <input
+                           type="checkbox"
+                           checked={isChecked}
+                           onChange={(e) => {
+                             const current = form.autoSharePlatforms || [];
+                             const updated = e.target.checked
+                               ? [...current, platform]
+                               : current.filter(p => p !== platform);
+                             setForm({ ...form, autoSharePlatforms: updated });
+                           }}
+                           className="rounded border-slate-300 text-primary-600 focus:ring-primary-500"
+                         />
+                         <span className={`inline-flex items-center justify-center w-6 h-6 rounded text-white text-xs ${color}`}>
+                           {label.charAt(0)}
+                         </span>
+                         <span className="text-sm text-slate-700">{label}</span>
+                       </label>
+                     );
+                   })}
+                 </div>
+               </div>
+
+               <div className="flex gap-3 pt-4">
                 <button
                   type="button"
                   onClick={resetForm}
@@ -264,22 +323,48 @@ export default function AdminNews() {
                     {new Date(item.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
                   </p>
                 </div>
-                <div className="flex gap-1">
-                  <button
-                    onClick={() => handleEdit(item)}
-                    className="p-2 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg"
-                  >
-                    <Edit2 className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(item.id)}
-                    className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-              <p className="text-sm text-slate-500 mt-2 line-clamp-2 hidden sm:block">{item.excerpt}</p>
+               <div className="flex gap-1">
+                   <button
+                     onClick={() => handleShareNow(item)}
+                     className="p-2 text-slate-400 hover:text-green-600 hover:bg-green-50 rounded-lg"
+                     title="Share Sekarang"
+                   >
+                     <Share2 className="w-4 h-4" />
+                   </button>
+                   <button
+                     onClick={() => handleEdit(item)}
+                     className="p-2 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg"
+                   >
+                     <Edit2 className="w-4 h-4" />
+                   </button>
+                   <button
+                     onClick={() => handleDelete(item.id)}
+                     className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg"
+                   >
+                     <Trash2 className="w-4 h-4" />
+                   </button>
+                 </div>
+               </div>
+               {item.autoSharePlatforms && item.autoSharePlatforms.length > 0 && (
+                 <div className="mt-2 flex items-center gap-2">
+                   <span className="text-xs text-slate-500">Auto-share:</span>
+                   {item.autoSharePlatforms.map((p) => {
+                     const sharedStatus = item.sharedTo?.includes(p);
+                     return (
+                       <button
+                         key={p}
+                         onClick={() => handleQuickShare(item, p as SocialPlatform)}
+                         className={`inline-flex items-center justify-center w-6 h-6 rounded text-white text-xs ${getPlatformLabel(p as SocialPlatform).color}`}
+                         title={`Share ke ${getPlatformLabel(p as SocialPlatform).label}`}
+                       >
+                         {sharedStatus && <Check className="w-3 h-3" />}
+                         {!sharedStatus && getPlatformLabel(p as SocialPlatform).label.charAt(0)}
+                       </button>
+                     );
+                   })}
+                 </div>
+               )}
+               <p className="text-sm text-slate-500 mt-2 line-clamp-2 hidden sm:block">{item.excerpt}</p>
             </div>
           </div>
         ))}

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { getSupabase, isSupabaseConfigured } from '../lib/supabaseClient';
+import { autoShareNews, generateNewsUrl, SocialPlatform, socialPlatforms } from '../utils/SocialShareService';
 
 export interface Leader {
   id: string;
@@ -19,6 +20,8 @@ export interface News {
   image: string;
   date: string;
   category: string;
+  autoSharePlatforms?: string[];
+  sharedTo?: string[];
 }
 
 export interface GalleryItem {
@@ -78,6 +81,7 @@ interface SiteContextType {
   addNews: (news: News) => void;
   updateNews: (id: string, news: Partial<News>) => void;
   deleteNews: (id: string) => void;
+  shareNews: (id: string, platforms: string[]) => Promise<string[]>;
   gallery: GalleryItem[];
   addGalleryItem: (item: GalleryItem) => void;
   deleteGalleryItem: (id: string) => void;
@@ -363,6 +367,24 @@ export function SiteProvider({ children }: { children: ReactNode }) {
     setNews(prev => prev.filter(n => n.id !== id));
   };
 
+  const shareNews = async (id: string, platforms: string[]): Promise<string[]> => {
+    const item = news.find(n => n.id === id);
+    if (!item) return [];
+
+    const url = generateNewsUrl(id);
+    const sharePlatforms = platforms.filter(p => socialPlatforms.includes(p as SocialPlatform)) as SocialPlatform[];
+    if (sharePlatforms.length === 0) return [];
+
+    const results = autoShareNews(url, item.title, sharePlatforms);
+    const successful = results.filter(r => r.success).map(r => r.platform);
+
+    if (successful.length > 0) {
+      updateNews(id, { sharedTo: successful });
+    }
+
+    return successful;
+  };
+
   const addGalleryItem = (item: GalleryItem) => {
     setGallery(prev => [item, ...prev]);
   };
@@ -453,6 +475,7 @@ export function SiteProvider({ children }: { children: ReactNode }) {
       addNews,
       updateNews,
       deleteNews,
+      shareNews,
       gallery,
       addGalleryItem,
       deleteGalleryItem,
