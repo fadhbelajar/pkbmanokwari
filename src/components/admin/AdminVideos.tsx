@@ -93,6 +93,7 @@ export default function AdminVideos() {
                 <label className="block text-sm font-medium text-slate-700 mb-1">Judul Video</label>
                 <input
                   type="text"
+                  autoComplete="headline"
                   required
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
@@ -104,10 +105,11 @@ export default function AdminVideos() {
                 <label className="block text-sm font-medium text-slate-700 mb-1">URL YouTube</label>
                 <div className="flex items-center gap-2">
                   <Link2 className="w-4 h-4 text-slate-400" />
-                  <input
-                    type="url"
-                    required
-                    value={form.url}
+                    <input
+                      type="url"
+                      autoComplete="url"
+                      required
+                      value={form.url}
                     onChange={(e) => setForm({ ...form, url: e.target.value })}
                     className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 outline-none transition-all"
                     placeholder="https://www.youtube.com/watch?v=..."

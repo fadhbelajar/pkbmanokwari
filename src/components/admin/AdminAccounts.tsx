@@ -115,6 +115,7 @@ export default function AdminAccounts() {
                 <label className="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap</label>
                 <input
                   type="text"
+                  autoComplete="name"
                   required
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -126,6 +127,7 @@ export default function AdminAccounts() {
                 <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
                 <input
                   type="email"
+                  autoComplete="email"
                   required
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -136,10 +138,11 @@ export default function AdminAccounts() {
               {!editingId && (
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">Password</label>
-                  <input
-                    type="password"
-                    required
-                    value={form.password}
+                    <input
+                      type="password"
+                      autoComplete="new-password"
+                      required
+                      value={form.password}
                     onChange={(e) => setForm({ ...form, password: e.target.value })}
                     className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 outline-none transition-all"
                     placeholder="Masukkan password"
@@ -192,10 +195,11 @@ export default function AdminAccounts() {
             <form onSubmit={handleResetPassword} className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Password Baru</label>
-                <input
-                  type="password"
-                  required
-                  value={newPassword}
+                 <input
+                   type="password"
+                   autoComplete="new-password"
+                   required
+                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 outline-none transition-all"
                   placeholder="Masukkan password baru"

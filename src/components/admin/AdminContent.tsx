@@ -145,9 +145,10 @@ export default function AdminContent() {
             </h3>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Nama Website</label>
-              <input
-                type="text"
-                value={form.siteName}
+                <input
+                  type="text"
+                  autoComplete="organization"
+                  value={form.siteName}
                 onChange={(e) => handleInputChange('siteName', e.target.value)}
                 placeholder="DPC PKB Manokwari"
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 outline-none transition-all"
@@ -155,9 +156,10 @@ export default function AdminContent() {
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Tagline</label>
-              <input
-                type="text"
-                value={form.tagline}
+                <input
+                  type="text"
+                  autoComplete="subtitle"
+                  value={form.tagline}
                 onChange={(e) => handleInputChange('tagline', e.target.value)}
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 outline-none transition-all"
               />
@@ -176,6 +178,7 @@ export default function AdminContent() {
               <textarea
                 value={form.aboutText}
                 onChange={(e) => handleInputChange('aboutText', e.target.value)}
+                autoComplete="off"
                 rows={4}
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 outline-none resize-none"
                 placeholder="Deskripsi singkat tentang DPC PKB Manokwari..."
@@ -188,6 +191,7 @@ export default function AdminContent() {
                   type="text"
                   value={form.aboutBullet1}
                   onChange={(e) => handleInputChange('aboutBullet1', e.target.value)}
+                  autoComplete="off"
                   className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:border-primary-500 outline-none text-sm"
                 />
               </div>
@@ -197,6 +201,7 @@ export default function AdminContent() {
                   type="text"
                   value={form.aboutBullet2}
                   onChange={(e) => handleInputChange('aboutBullet2', e.target.value)}
+                  autoComplete="off"
                   className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:border-primary-500 outline-none text-sm"
                 />
               </div>
@@ -206,6 +211,7 @@ export default function AdminContent() {
                   type="text"
                   value={form.aboutBullet3}
                   onChange={(e) => handleInputChange('aboutBullet3', e.target.value)}
+                  autoComplete="off"
                   className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:border-primary-500 outline-none text-sm"
                 />
               </div>
@@ -215,6 +221,7 @@ export default function AdminContent() {
                   type="text"
                   value={form.aboutBullet4}
                   onChange={(e) => handleInputChange('aboutBullet4', e.target.value)}
+                  autoComplete="off"
                   className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:border-primary-500 outline-none text-sm"
                 />
               </div>
@@ -224,6 +231,7 @@ export default function AdminContent() {
               <textarea
                 value={form.vision}
                 onChange={(e) => handleInputChange('vision', e.target.value)}
+                autoComplete="off"
                 rows={3}
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 outline-none resize-none"
                 placeholder="Visi organisasi..."
@@ -234,6 +242,7 @@ export default function AdminContent() {
               <textarea
                 value={form.mission}
                 onChange={(e) => handleInputChange('mission', e.target.value)}
+                autoComplete="off"
                 rows={4}
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 outline-none resize-none"
                 placeholder="Misi 1&#10;Misi 2&#10;Misi 3..."
@@ -244,6 +253,7 @@ export default function AdminContent() {
               <textarea
                 value={form.chairmanMessage}
                 onChange={(e) => handleInputChange('chairmanMessage', e.target.value)}
+                autoComplete="off"
                 rows={4}
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 outline-none resize-none"
               />
@@ -259,18 +269,20 @@ export default function AdminContent() {
             </h3>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Telepon</label>
-              <input
-                type="text"
-                value={form.phone}
+               <input
+                 type="text"
+                 autoComplete="tel"
+                 value={form.phone}
                 onChange={(e) => handleInputChange('phone', e.target.value)}
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 outline-none"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
-              <input
-                type="email"
-                value={form.email}
+               <input
+                 type="email"
+                 autoComplete="email"
+                 value={form.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 outline-none"
               />
@@ -279,9 +291,10 @@ export default function AdminContent() {
               <label className="block text-sm font-medium text-slate-700 mb-1">WhatsApp</label>
               <div className="flex items-center gap-2">
                 <span className="text-slate-400 text-sm">+62</span>
-                <input
-                  type="tel"
-                  value={form.whatsappNumber?.replace(/^62/, '') || ''}
+                 <input
+                   type="tel"
+                   autoComplete="tel"
+                   value={form.whatsappNumber?.replace(/^62/, '') || ''}
                   onChange={(e) => {
                     const num = e.target.value.replace(/\D/g, '');
                     handleInputChange('whatsappNumber', num ? `62${num}` : '');
@@ -293,8 +306,9 @@ export default function AdminContent() {
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Alamat</label>
-              <textarea
-                value={form.address}
+                <textarea
+                  autoComplete="street-address"
+                  value={form.address}
                 onChange={(e) => handleInputChange('address', e.target.value)}
                 rows={2}
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 outline-none resize-none"
@@ -318,9 +332,10 @@ export default function AdminContent() {
             ].map(({ label, field }) => (
               <div key={field}>
                 <label className="block text-sm font-medium text-slate-700 mb-1">{label}</label>
-                <input
-                  type="url"
-                  value={form[field as keyof typeof form] || ''}
+                 <input
+                   type="url"
+                   autoComplete="url"
+                   value={form[field as keyof typeof form] || ''}
                   onChange={(e) => handleInputChange(field, e.target.value)}
                   placeholder="https://..."
                   className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 outline-none"

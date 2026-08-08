@@ -98,6 +98,7 @@ export default function WhatsAppChatWidget() {
                 </label>
                 <input
                   type="text"
+                  autoComplete="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Nama Anda"
@@ -110,6 +111,7 @@ export default function WhatsAppChatWidget() {
                   Pesan
                 </label>
                 <textarea
+                  autoComplete="off"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   onKeyDown={handleKeyDown}

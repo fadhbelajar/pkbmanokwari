@@ -102,18 +102,20 @@ export default function AdminSettings() {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Nama Website</label>
-              <input
-                type="text"
-                value={form.siteName}
+                <input
+                  type="text"
+                  autoComplete="organization"
+                  value={form.siteName}
                 onChange={(e) => setForm({ ...form, siteName: e.target.value })}
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Tagline</label>
-              <input
-                type="text"
-                value={form.tagline}
+                <input
+                  type="text"
+                  autoComplete="subtitle"
+                  value={form.tagline}
                 onChange={(e) => setForm({ ...form, tagline: e.target.value })}
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none"
               />
@@ -121,6 +123,7 @@ export default function AdminSettings() {
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Tentang</label>
               <textarea
+                autoComplete="off"
                 value={form.aboutText}
                 onChange={(e) => setForm({ ...form, aboutText: e.target.value })}
                 rows={3}
@@ -136,25 +139,28 @@ export default function AdminSettings() {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Telepon</label>
-              <input
-                type="text"
-                value={form.phone}
+                <input
+                  type="text"
+                  autoComplete="tel"
+                  value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
-              <input
-                type="email"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none"
-              />
+                <input
+                  type="email"
+                  autoComplete="email"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none"
+                />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Alamat</label>
               <textarea
+                autoComplete="street-address"
                 value={form.address}
                 onChange={(e) => setForm({ ...form, address: e.target.value })}
                 rows={2}
@@ -165,9 +171,10 @@ export default function AdminSettings() {
               <label className="block text-sm font-medium text-slate-700 mb-1">WhatsApp</label>
               <div className="flex items-center gap-2">
                 <span className="text-slate-400 text-sm">+62</span>
-                <input
-                  type="tel"
-                  value={form.whatsappNumber?.replace(/^62/, '') || ''}
+                  <input
+                    type="tel"
+                    autoComplete="tel"
+                    value={form.whatsappNumber?.replace(/^62/, '') || ''}
                   onChange={(e) => {
                     const num = e.target.value.replace(/\D/g, '');
                     setForm({ ...form, whatsappNumber: num ? `62${num}` : '' });
@@ -185,6 +192,7 @@ export default function AdminSettings() {
         <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
           <h3 className="text-lg font-bold text-slate-900 mb-4">Visi</h3>
           <textarea
+            autoComplete="off"
             value={form.vision}
             onChange={(e) => setForm({ ...form, vision: e.target.value })}
             rows={4}
@@ -206,9 +214,10 @@ export default function AdminSettings() {
             ))}
           </div>
           <div className="flex gap-2">
-            <input
-              type="text"
-              value={newMission}
+              <input
+                type="text"
+                autoComplete="off"
+                value={newMission}
               onChange={(e) => setNewMission(e.target.value)}
               placeholder="Tambah misi baru..."
               className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none"
@@ -253,18 +262,20 @@ export default function AdminSettings() {
               <div className="flex-1 space-y-3">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">Nama Ketua</label>
-                  <input
-                    type="text"
-                    value={form.chairmanName}
+                   <input
+                     type="text"
+                     autoComplete="name"
+                     value={form.chairmanName}
                     onChange={(e) => setForm({ ...form, chairmanName: e.target.value })}
                     className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">Jabatan</label>
-                  <input
-                    type="text"
-                    value={form.chairmanPosition}
+                   <input
+                     type="text"
+                     autoComplete="job-title"
+                     value={form.chairmanPosition}
                     onChange={(e) => setForm({ ...form, chairmanPosition: e.target.value })}
                     className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none"
                   />
@@ -274,6 +285,7 @@ export default function AdminSettings() {
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Pesan Sambutan</label>
               <textarea
+                autoComplete="off"
                 value={form.chairmanMessage}
                 onChange={(e) => setForm({ ...form, chairmanMessage: e.target.value })}
                 rows={4}
@@ -289,45 +301,50 @@ export default function AdminSettings() {
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Facebook</label>
-              <input
-                type="url"
-                value={form.socialMedia.facebook}
+                <input
+                  type="url"
+                  autoComplete="url"
+                  value={form.socialMedia.facebook}
                 onChange={(e) => setForm({ ...form, socialMedia: { ...form.socialMedia, facebook: e.target.value } })}
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Instagram</label>
-              <input
-                type="url"
-                value={form.socialMedia.instagram}
+                <input
+                  type="url"
+                  autoComplete="url"
+                  value={form.socialMedia.instagram}
                 onChange={(e) => setForm({ ...form, socialMedia: { ...form.socialMedia, instagram: e.target.value } })}
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">YouTube</label>
-              <input
-                type="url"
-                value={form.socialMedia.youtube}
+                <input
+                  type="url"
+                  autoComplete="url"
+                  value={form.socialMedia.youtube}
                 onChange={(e) => setForm({ ...form, socialMedia: { ...form.socialMedia, youtube: e.target.value } })}
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Twitter</label>
-              <input
-                type="url"
-                value={form.socialMedia.twitter}
+               <input
+                 type="url"
+                 autoComplete="url"
+                 value={form.socialMedia.twitter}
                 onChange={(e) => setForm({ ...form, socialMedia: { ...form.socialMedia, twitter: e.target.value } })}
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">TikTok</label>
-              <input
-                type="url"
-                value={form.socialMedia.tiktok || ''}
+                <input
+                  type="url"
+                  autoComplete="url"
+                  value={form.socialMedia.tiktok || ''}
                 onChange={(e) => setForm({ ...form, socialMedia: { ...form.socialMedia, tiktok: e.target.value } })}
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none"
               />

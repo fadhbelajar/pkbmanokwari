@@ -119,6 +119,7 @@ export default function AdminNews() {
                     </label>
                     <input
                       type="url"
+                      autoComplete="url"
                       value={form.image}
                       onChange={(e) => setForm({ ...form, image: e.target.value })}
                       placeholder="Atau masukkan URL gambar"
@@ -145,6 +146,7 @@ export default function AdminNews() {
                   <label className="block text-sm font-medium text-slate-700 mb-1">Tanggal</label>
                   <input
                     type="date"
+                    autoComplete="off"
                     value={form.date}
                     onChange={(e) => setForm({ ...form, date: e.target.value })}
                     className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 outline-none"
@@ -156,6 +158,7 @@ export default function AdminNews() {
                 <label className="block text-sm font-medium text-slate-700 mb-1">Judul</label>
                 <input
                   type="text"
+                  autoComplete="headline"
                   required
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
@@ -166,6 +169,7 @@ export default function AdminNews() {
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Ringkasan</label>
                 <textarea
+                  autoComplete="off"
                   required
                   value={form.excerpt}
                   onChange={(e) => setForm({ ...form, excerpt: e.target.value })}

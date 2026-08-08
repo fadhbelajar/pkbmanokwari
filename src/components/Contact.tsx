@@ -125,10 +125,11 @@ export default function Contact() {
                   <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-1">
                     Nama Lengkap
                   </label>
-                  <input
-                    type="text"
-                    id="name"
-                    required
+                   <input
+                     type="text"
+                     id="name"
+                     autoComplete="name"
+                     required
                     value={formState.name}
                     onChange={(e) => setFormState(s => ({ ...s, name: e.target.value }))}
                     className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all"
@@ -140,10 +141,11 @@ export default function Contact() {
                     <label htmlFor="phone" className="block text-sm font-medium text-slate-700 mb-1">
                       No. Telepon
                     </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      required
+                     <input
+                       type="tel"
+                       id="phone"
+                       autoComplete="tel"
+                       required
                       value={formState.phone}
                       onChange={(e) => setFormState(s => ({ ...s, phone: e.target.value }))}
                       className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all"
@@ -154,10 +156,11 @@ export default function Contact() {
                     <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">
                       Email
                     </label>
-                    <input
-                      type="email"
-                      id="email"
-                      value={formState.email}
+                   <input
+                       type="email"
+                       id="email"
+                       autoComplete="email"
+                       value={formState.email}
                       onChange={(e) => setFormState(s => ({ ...s, email: e.target.value }))}
                       className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all"
                       placeholder="email@domain.com"
@@ -168,9 +171,10 @@ export default function Contact() {
                   <label htmlFor="message" className="block text-sm font-medium text-slate-700 mb-1">
                     Pesan
                   </label>
-                  <textarea
-                    id="message"
-                    required
+                   <textarea
+                     id="message"
+                     autoComplete="message"
+                     required
                     rows={4}
                     value={formState.message}
                     onChange={(e) => setFormState(s => ({ ...s, message: e.target.value }))}

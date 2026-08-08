@@ -109,6 +109,7 @@ export default function AdminLeaders() {
                 <p className="text-xs text-slate-400 mt-1">Atau masukkan URL gambar:</p>
                 <input
                   type="url"
+                  autoComplete="url"
                   value={form.photo}
                   onChange={(e) => setForm({ ...form, photo: e.target.value })}
                   placeholder="https://..."
@@ -120,6 +121,7 @@ export default function AdminLeaders() {
                 <label className="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap</label>
                 <input
                   type="text"
+                  autoComplete="name"
                   required
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -129,10 +131,11 @@ export default function AdminLeaders() {
 
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Jabatan</label>
-                <input
-                  type="text"
-                  required
-                  value={form.position}
+                 <input
+                   type="text"
+                   autoComplete="job-title"
+                   required
+                   value={form.position}
                   onChange={(e) => setForm({ ...form, position: e.target.value })}
                   className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 outline-none"
                 />
@@ -154,9 +157,10 @@ export default function AdminLeaders() {
 
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">No. Partai (Opsional)</label>
-                  <input
-                    type="text"
-                    value={form.partyNumber || ''}
+                   <input
+                     type="text"
+                     autoComplete="off"
+                     value={form.partyNumber || ''}
                     onChange={(e) => setForm({ ...form, partyNumber: e.target.value || undefined })}
                     className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 outline-none"
                     placeholder="Misal: 1, 2, 3..."
@@ -168,6 +172,7 @@ export default function AdminLeaders() {
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Biografi</label>
                 <textarea
+                  autoComplete="off"
                   required
                   value={form.bio}
                   onChange={(e) => setForm({ ...form, bio: e.target.value })}

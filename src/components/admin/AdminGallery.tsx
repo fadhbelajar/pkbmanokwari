@@ -88,6 +88,7 @@ export default function AdminGallery() {
                   </label>
                   <input
                     type="url"
+                    autoComplete="url"
                     value={form.image}
                     onChange={(e) => setForm({ ...form, image: e.target.value })}
                     placeholder="Atau masukkan URL gambar"
@@ -100,6 +101,7 @@ export default function AdminGallery() {
                 <label className="block text-sm font-medium text-slate-700 mb-1">Judul/Keterangan</label>
                 <input
                   type="text"
+                  autoComplete="off"
                   required
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
@@ -112,6 +114,7 @@ export default function AdminGallery() {
                 <label className="block text-sm font-medium text-slate-700 mb-1">Tanggal</label>
                 <input
                   type="date"
+                  autoComplete="off"
                   value={form.date}
                   onChange={(e) => setForm({ ...form, date: e.target.value })}
                   className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 outline-none"
