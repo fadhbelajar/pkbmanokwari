@@ -1,80 +1,159 @@
-import { Link } from 'react-router-dom';
+import { useState, useMemo } from 'react';
 import { useSite } from '../context/SiteContext';
-import { Calendar, ArrowRight, Share2 } from 'lucide-react';
+import { Search, Filter, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
+import PageHeader from '../components/PageHeader';
+import NewsCard from '../components/NewsCard';
+
+const CATEGORIES = ['Semua', 'Organisasi', 'Sosial', 'Politik', 'Kaderisasi', 'Kegiatan'];
+const ITEMS_PER_PAGE = 9;
 
 export default function BeritaPage() {
   const { news } = useSite();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeCategory, setActiveCategory] = useState('Semua');
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const filteredNews = useMemo(() => {
+    let result = news;
+
+    if (activeCategory !== 'Semua') {
+      result = result.filter(item => item.category === activeCategory);
+    }
+
+    if (searchTerm.trim()) {
+      const term = searchTerm.toLowerCase();
+      result = result.filter(item =>
+        item.title.toLowerCase().includes(term) ||
+        item.excerpt.toLowerCase().includes(term)
+      );
+    }
+
+    return result.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  }, [news, activeCategory, searchTerm]);
+
+  const totalPages = Math.ceil(filteredNews.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedNews = filteredNews.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  const handleCategoryChange = (category: string) => {
+    setActiveCategory(category);
+    setCurrentPage(1);
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1);
+  };
+
+  const goToPage = (page: number) => {
+    setCurrentPage(Math.max(1, Math.min(page, totalPages)));
+  };
 
   return (
-    <section className="pt-16 sm:pt-20 pb-12 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-6">
-          <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-3">
-            Berita &amp; Kegiatan
-          </h1>
-          <p className="text-base text-slate-500 max-w-3xl mx-auto">
-            Informasi terbaru dan perkembangan terkini DPC PKB Manokwari
-          </p>
-        </div>
+    <>
+      <PageHeader
+        title="Berita & Kegiatan"
+        subtitle="Informasi terbaru dan perkembangan terkini DPC PKB Manokwari"
+        breadcrumbs={[
+          { label: 'Beranda', href: '/' },
+          { label: 'Berita & Kegiatan' }
+        ]}
+        bgImage="/images/Cover_PKB_Manokwari.png"
+      />
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {news.map((item) => (
-            <Link key={item.id} to={`/berita/${item.id}`} className="group block bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:border-primary-200 transition-all duration-300 overflow-hidden">
-              <article className="h-full flex flex-col">
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                   <div className="absolute top-4 left-4">
-                     <span className="px-3 py-1 bg-primary-600 text-white text-xs font-semibold rounded-full">
-                       {item.category}
-                     </span>
-                   </div>
-                   <div className="absolute top-4 right-4">
-                     <button
-                       onClick={(e) => {
-                         e.preventDefault();
-                         e.stopPropagation();
-                         const link = `https://wa.me/?text=${encodeURIComponent(item.title + ' ' + window.location.origin + `/berita/${item.id}`)}`;
-                         window.open(link, '_blank', 'noopener,noreferrer');
-                       }}
-                       className="w-7 h-7 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-all duration-200 opacity-0 group-hover:opacity-100"
-                       aria-label="Share"
-                     >
-                       <Share2 className="w-3.5 h-3.5" />
-                     </button>
-                   </div>
+      <section className="py-12 sm:py-16 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-8">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  placeholder="Cari berita..."
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all"
+                />
+              </div>
+
+              <div className="flex items-center gap-2 overflow-x-auto pb-1">
+                <Filter className="w-4 h-4 text-slate-500 flex-shrink-0" />
+                {CATEGORIES.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => handleCategoryChange(cat)}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
+                      activeCategory === cat
+                        ? 'bg-primary-600 text-white shadow-md'
+                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {searchTerm && (
+              <p className="text-sm text-slate-500 mt-3">
+                Ditemukan <strong>{filteredNews.length}</strong> berita untuk "{searchTerm}"
+              </p>
+            )}
+          </div>
+
+          {paginatedNews.length > 0 ? (
+            <>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                {paginatedNews.map((item) => (
+                  <NewsCard key={item.id} item={item} />
+                ))}
+              </div>
+
+              {totalPages > 1 && (
+                <div className="flex items-center justify-center gap-4 mt-12 py-6 border-t border-slate-100">
+                  <button
+                    onClick={() => goToPage(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className={`flex items-center gap-1 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      currentPage === 1
+                        ? 'text-slate-300 cursor-not-allowed'
+                        : 'text-slate-700 hover:bg-slate-100'
+                    }`}
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    Sebelumnya
+                  </button>
+
+                  <span className="text-sm text-slate-500">
+                    Halaman {currentPage} dari {totalPages}
+                  </span>
+
+                  <button
+                    onClick={() => goToPage(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className={`flex items-center gap-1 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      currentPage === totalPages
+                        ? 'text-slate-300 cursor-not-allowed'
+                        : 'text-slate-700 hover:bg-slate-100'
+                    }`}
+                  >
+                    Selanjutnya
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
                 </div>
-                <div className="p-6 flex-1 flex flex-col">
-                  <div className="flex items-center gap-2 text-xs text-slate-500 mb-3">
-                    <Calendar className="w-3.5 h-3.5" />
-                    <time dateTime={item.date}>
-                      {new Date(item.date).toLocaleDateString('id-ID', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric'
-                      })}
-                    </time>
-                  </div>
-                  <h2 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-primary-700 transition-colors line-clamp-2">
-                    {item.title}
-                  </h2>
-                  <p className="text-sm text-slate-600 leading-relaxed line-clamp-3 mb-4 flex-1">
-                    {item.excerpt}
-                  </p>
-                  <div className="flex items-center justify-between pt-4 border-t border-slate-100 text-sm text-primary-600 font-medium">
-                    <span>Baca selengkapnya</span>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </div>
-              </article>
-            </Link>
-          ))}
+              )}
+            </>
+          ) : (
+            <div className="text-center py-16 bg-white rounded-2xl border border-slate-100">
+              <Calendar className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-slate-900 mb-2">Tidak ada berita ditemukan</h3>
+              <p className="text-slate-500">
+                Coba ubah kata kunci pencarian atau filter kategori
+              </p>
+            </div>
+          )}
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
