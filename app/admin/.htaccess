@@ -1,0 +1,11 @@
+# Protect admin area
+php_value session.cookie_httponly 1
+php_value session.cookie_httponly 1
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /admin
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+</IfModule>

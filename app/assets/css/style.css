@@ -1,0 +1,90 @@
+/* PKB Manokwari - Custom Styles */
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    color: #1e293b;
+    line-height: 1.6;
+}
+
+.text-primary-600 { color: #008c44 !important; }
+.bg-primary-600 { background-color: #008c44 !important; }
+.bg-primary-50 { background-color: #f0fdf4; }
+
+.hero-section {
+    min-height: 360px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.btn-primary-custom {
+    background-color: #008c44;
+    border-color: #008c44;
+}
+
+.btn-primary-custom:hover {
+    background-color: #006b35;
+    border-color: #006b35;
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, #008c44 0%, #f59e0b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.leader-card:hover {
+    transform: translateY(-2px);
+    transition: all 0.2s ease;
+}
+
+.news-card:hover {
+    transform: translateY(-2px);
+    transition: all 0.2s ease;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}
+
+.social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: white;
+    font-size: 18px;
+    transition: transform 0.2s ease;
+}
+
+.social-icon:hover {
+    transform: scale(1.1);
+}
+
+.admin-badge {
+    background: linear-gradient(135deg, #008c44 0%, #f59e0b 100%);
+}
+
+.border-primary-custom {
+    border-color: #008c44 !important;
+}
+
+.text-accent {
+    color: #f59e0b !important;
+}
