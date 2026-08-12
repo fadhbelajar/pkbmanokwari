@@ -38,6 +38,18 @@ if (strpos($uri, '/admin/login.php') === 0 || strpos($uri, '/admin/logout.php') 
     exit();
 }
 
+// Serve admin.php via admin.php entry point
+if (strpos($uri, '/admin.php') === 0) {
+    include __DIR__ . '/admin.php';
+    exit();
+}
+
+// Serve API files directly (for dev server; .htaccess handles on shared hosting)
+if (strpos($uri, '/api/') === 0 && file_exists(__DIR__ . $uri)) {
+    include __DIR__ . $uri;
+    exit();
+}
+
 // Route /admin/ to admin.php or admin panel
 if (strpos($uri, '/admin') === 0) {
     if (basename($uri) === 'admin.php') {

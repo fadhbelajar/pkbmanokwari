@@ -12,7 +12,10 @@ RewriteCond %{HTTPS} off
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 # Route admin area to admin.php
-RewriteRule ^admin(/.*)?$ /admin.php [L,QSA]
+RewriteRule ^admin/login\.php$ /admin.php?action=login [L,QSA]
+RewriteRule ^admin/logout\.php$ /admin.php?action=logout [L,QSA]
+RewriteRule ^admin/?$ /admin.php [L,QSA]
+RewriteRule ^admin/(.*)$ /admin.php?admin_path=$1 [L,QSA]
 
 # Jangan rewrite static files & directories
 RewriteCond %{REQUEST_FILENAME} !-f

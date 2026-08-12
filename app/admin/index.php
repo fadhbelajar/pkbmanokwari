@@ -3,7 +3,7 @@ require_once __DIR__ . '/../core/config.php';
 require_once __DIR__ . '/../core/functions.php';
 
 if (!isLoggedIn()) {
-    header('Location: /admin/login.php');
+    header('Location: /admin.php?action=login');
     exit();
 }
 
@@ -54,7 +54,9 @@ $accounts = $stmt->fetchAll();
                 <a href="?page=backup" class="nav-link <?= $page === 'backup' ? 'active fw-bold' : '' ?>"><i class="bi bi-database me-2"></i>Backup & Restore</a>
             </div>
             <div class="p-3 border-top">
-                <a href="/admin/logout.php" class="nav-link text-danger"><i class="bi bi-box-arrow-right me-2"></i>Logout</a>
+                <form method="POST" action="/admin.php?action=logout" class="d-inline">
+                    <a href="/admin.php?action=logout" class="nav-link text-danger" onclick="event.preventDefault(); this.closest('form').submit();"><i class="bi bi-box-arrow-right me-2"></i>Logout</a>
+                </form>
             </div>
         </nav>
 

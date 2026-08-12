@@ -3,7 +3,7 @@ require_once __DIR__ . '/../core/config.php';
 require_once __DIR__ . '/../core/functions.php';
 
 if (isLoggedIn()) {
-    header('Location: /admin/');
+    header('Location: /admin.php');
     exit();
 }
 
@@ -11,7 +11,7 @@ $error = '';
 if ($_POST) {
     $password = $_POST['password'] ?? '';
     if (login($password)) {
-        header('Location: /admin/');
+        header('Location: /admin.php');
         exit();
     } else {
         $error = 'Password salah!';
