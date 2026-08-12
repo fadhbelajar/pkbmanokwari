@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { getSupabase, isSupabaseConfigured } from '../lib/supabaseClient';
+import { apiClient, isApiConfigured } from '../lib/apiClient';
 import { autoShareNews, generateNewsUrl, SocialPlatform, socialPlatforms } from '../utils/SocialShareService';
 
 export interface Leader {
@@ -311,60 +311,108 @@ export function SiteProvider({ children }: { children: ReactNode }) {
   }, [accounts]);
 
   useEffect(() => {
-    if (!isSupabaseConfigured()) return;
+    if (!isApiConfigured()) return;
 
-    const loadFromSupabase = async () => {
-      const supabase = getSupabase()!;
+    const loadFromApi = async () => {
       try {
-        const res = await Promise.all([
-          (supabase as any).from('site_settings').select('data').eq('id', 'main').maybeSingle(),
-          (supabase as any).from('leaders').select('*'),
-          (supabase as any).from('news').select('*'),
-          (supabase as any).from('gallery_items').select('*'),
-          (supabase as any).from('video_links').select('*')
+        const [apiSettings, apiLeaders, apiNews, apiGallery, apiVideos] = await Promise.all([
+          apiClient.get<SiteSettings | null>('settings.php'),
+          apiClient.get<Leader[]>('leaders.php'),
+          apiClient.get<News[]>('news.php'),
+          apiClient.get<GalleryItem[]>('gallery.php'),
+          apiClient.get<VideoLink[]>('videos.php'),
         ]);
 
-        if (res[0].error || res[1].error || res[2].error || res[3].error || res[4].error) return;
-
-        if (res[0].data?.data) setSettings(res[0].data.data);
-        if (res[1].data && res[1].data.length > 0) setLeaders(res[1].data as Leader[]);
-        if (res[2].data && res[2].data.length > 0) setNews(res[2].data as News[]);
-        if (res[3].data && res[3].data.length > 0) setGallery(res[3].data as GalleryItem[]);
-        if (res[4].data && res[4].data.length > 0) setVideoLinks(res[4].data as VideoLink[]);
+        if (apiSettings) setSettings(apiSettings);
+        if (apiLeaders && apiLeaders.length > 0) setLeaders(apiLeaders);
+        if (apiNews && apiNews.length > 0) setNews(apiNews);
+        if (apiGallery && apiGallery.length > 0) setGallery(apiGallery);
+        if (apiVideos && apiVideos.length > 0) setVideoLinks(apiVideos);
       } catch {
-        // silent fail, fallback to localStorage
+        // silent fail, fallback to localStorage defaults
       }
     };
 
-    loadFromSupabase();
+    loadFromApi();
   }, []);
 
-  const updateSettings = (newSettings: Partial<SiteSettings>) => {
+  const updateSettings = async (newSettings: Partial<SiteSettings>) => {
     setSettings(prev => ({ ...prev, ...newSettings }));
+    try {
+      if (isApiConfigured()) {
+        await apiClient.post('settings.php', { data: { ...settings, ...newSettings } });
+      }
+    } catch {
+      // API not available, local state still updated
+    }
   };
 
-  const addLeader = (leader: Leader) => {
+  const addLeader = async (leader: Leader) => {
     setLeaders(prev => [...prev, leader]);
+    try {
+      if (isApiConfigured()) {
+        const apiLeader = {
+          id: leader.id,
+          name: leader.name,
+          position: leader.position,
+          photo: leader.photo,
+          bio: leader.bio,
+          order_num: leader.order,
+          party_number: leader.partyNumber,
+        };
+        await apiClient.post('leaders.php', apiLeader);
+      }
+    } catch {}
   };
 
-  const updateLeader = (id: string, updates: Partial<Leader>) => {
+  const updateLeader = async (id: string, updates: Partial<Leader>) => {
     setLeaders(prev => prev.map(l => l.id === id ? { ...l, ...updates } : l));
+    try {
+      if (isApiConfigured()) {
+        await apiClient.put(`leaders.php?id=${id}`, {
+          name: '', position: '', photo: '', bio: '',
+          ...updates,
+          order_num: updates.order,
+          party_number: updates.partyNumber,
+        });
+      }
+    } catch {}
   };
 
-  const deleteLeader = (id: string) => {
+  const deleteLeader = async (id: string) => {
     setLeaders(prev => prev.filter(l => l.id !== id));
+    try {
+      if (isApiConfigured()) {
+        await apiClient.delete(`leaders.php?id=${id}`);
+      }
+    } catch {}
   };
 
-  const addNews = (item: News) => {
+  const addNews = async (item: News) => {
     setNews(prev => [item, ...prev]);
+    try {
+      if (isApiConfigured()) {
+        await apiClient.post('news.php', item);
+      }
+    } catch {}
   };
 
-  const updateNews = (id: string, updates: Partial<News>) => {
+  const updateNews = async (id: string, updates: Partial<News>) => {
     setNews(prev => prev.map(n => n.id === id ? { ...n, ...updates } : n));
+    try {
+      if (isApiConfigured()) {
+        await apiClient.put(`news.php?id=${id}`, updates);
+      }
+    } catch {}
   };
 
-  const deleteNews = (id: string) => {
+  const deleteNews = async (id: string) => {
     setNews(prev => prev.filter(n => n.id !== id));
+    try {
+      if (isApiConfigured()) {
+        await apiClient.delete(`news.php?id=${id}`);
+      }
+    } catch {}
   };
 
   const shareNews = async (id: string, platforms: string[]): Promise<string[]> => {

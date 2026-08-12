@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Save, Upload, Cloud, Download, Loader2, Check, AlertCircle, Database } from 'lucide-react';
 import { useSite } from '@/context/SiteContext';
-import { getSupabase, isSupabaseConfigured } from '@/lib/supabaseClient';
+import { apiClient, isApiConfigured } from '@/lib/apiClient';
 
 interface AdminBackupProps {
   onBackup?: () => void;
@@ -61,9 +61,9 @@ export default function AdminBackup({ onBackup, onRestore }: AdminBackupProps) {
   };
 
   const handleCloudUpload = async () => {
-    if (!isSupabaseConfigured()) {
+    if (!isApiConfigured()) {
       setCloudStatus('error');
-      setCloudMessage('Supabase belum dikonfigurasi. Pastikan VITE_SUPABASE_URL dan VITE_SUPABASE_ANON_KEY di .env');
+      setCloudMessage('API belum dikonfigurasi. Pastikan VITE_API_BASE_URL di .env');
       return;
     }
 
@@ -71,7 +71,6 @@ export default function AdminBackup({ onBackup, onRestore }: AdminBackupProps) {
     setCloudStatus('idle');
 
     try {
-      const supabase = getSupabase()!;
       const data = {
         settings,
         leaders,
@@ -82,27 +81,26 @@ export default function AdminBackup({ onBackup, onRestore }: AdminBackupProps) {
         timestamp: new Date().toISOString()
       };
 
-      const { error } = await (supabase as any)
-        .from('site_backup')
-        .upsert({ id: 'main', data });
-
-      if (error) throw error;
+      await apiClient.post('backup.php', {
+        action: 'backup',
+        data
+      });
 
       setCloudStatus('success');
-      setCloudMessage('Data berhasil di-backup ke Supabase!');
+      setCloudMessage('Data berhasil di-backup ke database!');
       onBackup?.();
     } catch (err: any) {
       setCloudStatus('error');
-      setCloudMessage(err instanceof Error ? err.message : 'Gagal backup ke Supabase');
+      setCloudMessage(err.message || 'Gagal backup ke database');
     } finally {
       setCloudAction('idle');
     }
   };
 
   const handleCloudDownload = async () => {
-    if (!isSupabaseConfigured()) {
+    if (!isApiConfigured()) {
       setCloudStatus('error');
-      setCloudMessage('Supabase belum dikonfigurasi.');
+      setCloudMessage('API belum dikonfigurasi.');
       return;
     }
 
@@ -111,29 +109,28 @@ export default function AdminBackup({ onBackup, onRestore }: AdminBackupProps) {
     setCloudMessage('');
 
     try {
-      const supabase = getSupabase()!;
+      const result = await apiClient.get<{ data: Record<string, unknown> | null }>('backup.php');
 
-      const { data: backupData, error } = await (supabase as any)
-        .from('site_backup')
-        .select('data')
-        .eq('id', 'main')
-        .single();
+      if (!result || !result.data) {
+        setCloudStatus('error');
+        setCloudMessage('Tidak ada data backup tersedia di database.');
+        return;
+      }
 
-      if (error) throw error;
+      const dataStr = JSON.stringify(result.data, null, 2);
 
-      const dataStr = JSON.stringify(backupData.data, null, 2);
       const success = restoreData(dataStr);
       if (success) {
         setCloudStatus('success');
-        setCloudMessage('Data berhasil direstore dari Supabase!');
+        setCloudMessage('Data berhasil direstore dari database!');
         onRestore?.();
       } else {
         setCloudStatus('error');
-        setCloudMessage('Gagal memproses data dari Supabase.');
+        setCloudMessage('Gagal memproses data dari database.');
       }
     } catch (err: any) {
       setCloudStatus('error');
-      setCloudMessage(err.message || 'Gagal mengambil data dari Supabase');
+      setCloudMessage(err.message || 'Gagal mengambil data dari database');
     } finally {
       setCloudAction('idle');
     }
@@ -181,7 +178,7 @@ export default function AdminBackup({ onBackup, onRestore }: AdminBackupProps) {
         <div className="border border-slate-200 rounded-xl p-4 space-y-4">
           <h4 className="font-medium text-slate-700 flex items-center gap-2">
             <Cloud className="w-4 h-4 text-slate-600" />
-            Cloud (Supabase)
+            Cloud (MySQL)
           </h4>
           <div className="flex gap-3">
             <button
@@ -210,11 +207,11 @@ export default function AdminBackup({ onBackup, onRestore }: AdminBackupProps) {
             </button>
           </div>
           <p className="text-xs text-slate-400">
-            Sinkron data ke Supabase untuk backup online.
+            Sinkron data ke database MySQL untuk backup online.
           </p>
-          {!isSupabaseConfigured() && (
+          {!isApiConfigured() && (
             <p className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">
-              Konfigurasi VITE_SUPABASE_URL dan VITE_SUPABASE_ANON_KEY di .env
+              Konfigurasi VITE_API_BASE_URL di .env
             </p>
           )}
         </div>
