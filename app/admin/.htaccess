@@ -1,11 +1,20 @@
-# Protect admin area
-php_value session.cookie_httponly 1
-php_value session.cookie_httponly 1
+# Admin area configuration
+<IfModule mod_php.c>
+    php_value session.cookie_httponly 1
+    php_value session.use_strict_mode 1
+</IfModule>
 
+# Allow access within this directory
 <IfModule mod_rewrite.c>
 RewriteEngine On
-RewriteBase /admin
+RewriteBase /
+
+# Serve login.php and logout.php directly
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^(login|logout)\.php$ - [L]
+
+# All other admin requests go to index.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+RewriteRule ^(.*)$ index.php [L,QSA]
 </IfModule>
